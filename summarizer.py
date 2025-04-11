@@ -24,5 +24,5 @@ def summarizer(transcript):
 
     return response['message']['content']
 
-print("\nSummary:")
+
 
