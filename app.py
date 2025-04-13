@@ -28,15 +28,21 @@ if st.button("Summarize Video"):
         st.error("Please provide YouTube URL.")
     else:
         try:
-            with st.spinner("Generating summary..."):
+            with st.spinner("Fetching video title..."):
                 title = get_video_title(url)
+                
+            with st.spinner("Extracting video ID..."):
                 video_id = get_video_id(url)
+
+            with st.spinner("Retrieving transcript..."):
                 transcript = get_transcript(video_id)
-                summary = summarizer(transcript)
-            
+
             if not transcript:
-                    st.warning("Transcript not available for this video.")
+                st.warning("Transcript not available for this video.")
             else:
+                with st.spinner("Generating summary..."):
+                    summary = summarizer(transcript)
+                    
                 st.success("Summary generated!")
 
                 st.markdown("### Video Title")
