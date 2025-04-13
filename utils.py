@@ -3,20 +3,56 @@ import requests
 from googleapiclient.discovery import build_from_document
 
 
-from youtube_transcript_api import YouTubeTranscriptApi
-from pytube import YouTube
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
+from pytube import extract
+import yt_dlp
+
 import re
 
-def get_video_id(url_link):
-  return url_link.split("watch?v=")[-1]
+def get_video_id(url):
+    return extract.video_id(url)
 
 def get_transcript(video_id):
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-    return " ".join([t['text'] for t in transcript])
+    """
+    Get transcript for a YouTube video, prioritizing English and German languages.
+    Returns the transcript text or None if no transcript is available.
+    """
+    try:
+        # Try English first
+        try:
+            transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
+            return " ".join([t.get('text', '') if isinstance(t, dict) else getattr(t, 'text', '') for t in transcript])
+        except NoTranscriptFound:
+            # Try German if English is not available
+            try:
+                transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['de'])
+                return " ".join([t.get('text', '') if isinstance(t, dict) else getattr(t, 'text', '') for t in transcript])
+            except NoTranscriptFound:
+                # Get list of available transcripts
+                available_transcripts = YouTubeTranscriptApi.list_transcripts(video_id)
+                
+                # Process available transcripts
+                for transcript in available_transcripts:
+                    try:
+                        fetched = transcript.fetch()
+                        # Check how to access the text based on the object type
+                        if fetched and len(fetched) > 0:
+                            first_item = fetched[0]
+                            if isinstance(first_item, dict) and 'text' in first_item:
+                                return " ".join([item['text'] for item in fetched])
+                            else:
+                                # Try accessing as an object attribute
+                                return " ".join([getattr(item, 'text', '') for item in fetched])
+                    except Exception as e:
+                        print(f"Error processing transcript: {e}")
+                        continue
+                
+                return None
+    except Exception as e:
+        print(f"[Transcript Error]: {e}")
+        return None
 
-def get_video_title(url):
-    import yt_dlp
-    
+def get_video_title(url):  
     try:
         ydl_opts = {
             'quiet': True,
