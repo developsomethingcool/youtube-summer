@@ -3,6 +3,8 @@
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
 from pytube import extract
 import yt_dlp
+from langdetect import detect
+
 
 def get_video_id(url):
     return extract.video_id(url)
@@ -69,3 +71,24 @@ def get_video_title(url):
     except Exception as e:
         raise ValueError(f"Could not retrieve video title with yt-dlp: {str(e)}")
 
+
+def format_transcript(text, words_per_line=15):
+    words = text.split()
+    lines = [' '.join(words[i:i+words_per_line]) for i in range(0, len(words), words_per_line)]
+    return '\n'.join(lines)
+
+
+def detect_language(transcript):
+    try:
+        lang_code = detect(transcript)
+        flags = {
+            'en': '🇬🇧',
+            'de': '🇩🇪',
+            'fr': '🇫🇷',
+            'es': '🇪🇸',
+            
+        }
+        flag = flags.get(lang_code, '🌐')
+        return lang_code, flag
+    except:
+        return None, '🌐'

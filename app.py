@@ -1,7 +1,7 @@
 # Streamlit app
 
 import streamlit as st
-from utils import get_video_id, get_transcript, get_video_title
+from utils import get_video_id, get_transcript, get_video_title, format_transcript, detect_language
 from summarizer import summarizer
 
 st.set_page_config(page_title="YouTube Video Summarizer", page_icon="🎥", layout="centered")
@@ -42,20 +42,22 @@ if st.button("Summarize Video"):
             else:
                 with st.spinner("Generating summary..."):
                     summary = summarizer(transcript)
-                    
-                st.success("Summary generated!")
 
-                st.markdown("### Video Title")
-                st.write(title)
+                st.markdown(f"## 🎬 *{title}*")
 
-                st.markdown("### Summary")
-                st.write(summary)
+                st.markdown("### ✨ Summary")
+                st.markdown(summary)
 
-                with st.expander("See full transcript"):
-                    st.markdown(transcript.replace('. ', '.\n\n'))
+                lang_code, flag = detect_language(transcript)
+
+                st.markdown(f"### Transcript Language Detected: {flag} ({lang_code})")
+
+                with st.expander("📝 See full transcript"):
+                    st.text_area("Transcript", format_transcript(transcript), height=300)
+
 
                 st.download_button(
-                    label="Download Summary as .txt",
+                    label="⬇️ Download Summary as .txt",
                     data=summary,
                     file_name=f"{title}.txt",
                     mime="text/plain"
