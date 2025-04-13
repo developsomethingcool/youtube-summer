@@ -43,6 +43,7 @@ def get_transcript(video_id):
                         continue
                 
                 return None
+            
     except Exception as e:
         print(f"[Transcript Error]: {e}")
         return None

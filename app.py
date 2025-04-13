@@ -34,20 +34,29 @@ if st.button("Summarize Video"):
                 transcript = get_transcript(video_id)
                 summary = summarizer(transcript)
             
-            st.success("Summary generated!")
+            if not transcript:
+                    st.warning("Transcript not available for this video.")
+            else:
+                st.success("Summary generated!")
 
-            st.markdown("### Video Title")
-            st.write(title)
+                st.markdown("### Video Title")
+                st.write(title)
 
-            st.markdown("### Summary")
-            st.write(summary)
+                st.markdown("### Summary")
+                st.write(summary)
 
-            st.download_button(
-                label="Download Summary as .txt",
-                data=summary,
-                file_name=f"{title}.txt",
-                mime="text/plain"
-            )
+                with st.expander("See full transcript"):
+                    st.markdown(transcript.replace('. ', '.\n\n'))
+
+                st.download_button(
+                    label="Download Summary as .txt",
+                    data=summary,
+                    file_name=f"{title}.txt",
+                    mime="text/plain"
+                )
+
+
+
         except ValueError as e:
             st.error(f"Error: {e}")
 
