@@ -1,13 +1,8 @@
 # Helper functions
-import requests
-from googleapiclient.discovery import build_from_document
 
-
-from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
+from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
 from pytube import extract
 import yt_dlp
-
-import re
 
 def get_video_id(url):
     return extract.video_id(url)

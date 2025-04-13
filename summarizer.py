@@ -1,9 +1,6 @@
 # LLM logic
 
-from youtube_transcript_api import YouTubeTranscriptApi
 from ollama import chat
-from ollama import ChatResponse
-from utils import get_video_id, get_transcript
 
 def summarizer(transcript):
     prompt = f"""Summarize the following YouTube video transcript into:

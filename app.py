@@ -3,8 +3,6 @@
 import streamlit as st
 from utils import get_video_id, get_transcript, get_video_title
 from summarizer import summarizer
-import re
-import os
 
 st.set_page_config(page_title="YouTube Video Summarizer", page_icon="🎥", layout="centered")
 st.title("🎥 YouTube Video Summarizer")
