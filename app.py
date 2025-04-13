@@ -46,7 +46,11 @@ if st.button("Summarize Video"):
                 st.markdown(f"## 🎬 *{title}*")
 
                 st.markdown("### ✨ Summary")
-                st.markdown(summary)
+
+                st.text_area("Summary", summary, height=250)
+
+                if st.button("📋 Copy summary to clipboard"):
+                    st.toast("Summary copied! (Use Ctrl+C / Cmd+C to copy from the box above)")
 
                 lang_code, flag = detect_language(transcript)
 
