@@ -1,4 +1,4 @@
-# LLM logic
+# Summarizer
 
 from ollama import chat
 
