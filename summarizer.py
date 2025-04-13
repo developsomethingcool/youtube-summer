@@ -22,6 +22,9 @@ def summarizer(transcript):
       }
     ])
 
+    if not response or 'message' not in response:
+        raise ValueError("Failed to generate summary from LLM.")
+
     return response['message']['content']
 
 
