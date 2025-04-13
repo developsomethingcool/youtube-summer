@@ -5,7 +5,20 @@ from utils import get_video_id, get_transcript
 from summarizer import summarizer
 import re
 
+st.set_page_config(page_title="YouTube Video Summarizer", page_icon="🎥", layout="centered")
 st.title("🎥 YouTube Video Summarizer")
+
+st.markdown("""
+Welcome! This tool helps you quickly summarize any YouTube video using AI.
+
+Paste a YouTube link below and get:
+- A clean, human-readable summary
+- Key bullet points with main ideas
+- Ability to download your summary
+- Ask custom questions about the video content
+
+Great for learning faster, note-taking, or saving time!
+""")
 
 url = st.text_input("Paste YouTube video link:")
 file_name = st.text_input("Paste the file name")
